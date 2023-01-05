@@ -31,6 +31,7 @@ namespace assignment{
         }
         public static void menuitems(){
         List<Items> p = new List<Items>();
+        List<ItemOrders> list1 = new List<ItemOrders>();
     	p.Add(new Items {ItemId=1, ItemName="Dosa", Rate=30});
 	    p.Add(new Items {ItemId=2, ItemName="Idly", Rate=20});
 	    p.Add(new Items {ItemId=3, ItemName="Puri", Rate=30});
@@ -44,11 +45,11 @@ namespace assignment{
             Console.WriteLine(" {0}",item.Rate);*/
         }
         f.Close();
-        filetolist(p);
+        filetolist(p,list1);
         
 
     }
-    public static void filetolist(List<Items> item){
+    public static void filetolist(List<Items> item,List<ItemOrders> orderitems){
         int b=0;
         //int n=0;
         int totalamount=0;
@@ -70,12 +71,12 @@ namespace assignment{
         Console.WriteLine("Select no.of items:");
         int n=Convert.ToInt32(Console.ReadLine());
         for(int i=0;i<n;i++){
-            totalamount=totalamount+orders(item,n);
+            totalamount=totalamount+orders(item,n,orderitems);
         }
         Console.WriteLine($"Total amount is:{totalamount}");
     }
     
-    public static int orders(List<Items> it,int n){
+    public static int orders(List<Items> it,int n,List<ItemOrders> item){
         int k=0;
         exception1 :
         Console.WriteLine("select ItemId:");
@@ -110,12 +111,12 @@ namespace assignment{
         }
         try{}
         finally{
-            k=GenerateandprintBill(it,a,b,n);
+            k=GenerateandprintBill(it,item,a,b);
         }
         return k;
     }
     
-        public static int GenerateandprintBill(List<Items> mylist,int a, int b,int n){
+        public static int GenerateandprintBill(List<Items> mylist,List<ItemOrders> item,int a, int b){
             
             int c=0;
             foreach(Items it in mylist){
@@ -123,12 +124,12 @@ namespace assignment{
                     c=it.Rate*b;
                 }
             }
-            itemstolist(mylist,a,b,n,c);
+             
+            itemstolist(item,a,b,c);
             return c;
         }
-        public static void itemstolist(List<Items> mylist,int a,int b,int n,int c){
-            List<ItemOrders> list1 = new List<ItemOrders>();
-                list1.Add(new ItemOrders {Id=a, Quantity=b,Bill=c});    
+        public static void itemstolist(List<ItemOrders> list1,int a,int b, int c){
+            list1.Add(new ItemOrders {Id=a, Quantity=b,Bill=c}); 
             StreamWriter ordereditems = File.CreateText("C:\\assignment\\ItemOrders.dat");
             foreach(ItemOrders item in list1){
                 string str =item.Id.ToString()+ " " +item.Quantity.ToString()+" "+item.Bill.ToString();
