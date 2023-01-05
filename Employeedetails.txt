@@ -1,0 +1,54 @@
+using System;
+namespace MyFirstProject
+{
+     class Program
+    {
+        static string[ , ] empdetails=new string[5,3];
+        static int[ , ] empsalary=new int[5,7];
+    public static void Main(string[] args){
+        inputdetails();
+        outputdetails();
+    }
+        static void inputdetails(){
+            for (int i=0;i<2;i++){
+                 Console.WriteLine("Enter EmpCode");
+                 empdetails[i, 0] = Console.ReadLine();
+                 Console.WriteLine("Enter EmpName");
+                 empdetails[i, 1] = Console.ReadLine();
+                 Console.WriteLine("Enter ContactNo");
+                 empdetails[i, 2] = Console.ReadLine();
+                 empsalary[i, 0] = Int32.Parse(empdetails[i, 0]);
+                 Console.WriteLine("Enter Basic salary");
+                 empsalary[i, 1] = Int32.Parse(Console.ReadLine());
+                 Console.WriteLine("Enter DA salary");
+                 empsalary[i, 2] = Int32.Parse(Console.ReadLine());
+                 Console.WriteLine("Enter HRA salary");
+                 empsalary[i, 3] = Int32.Parse(Console.ReadLine());
+                 empsalary[i,4] = getgross(empsalary[i,1],empsalary[i,2],empsalary[i,3]);
+                 Console.WriteLine("Enter TDS salary:");
+                 empsalary[i,5] = Int32.Parse(Console.ReadLine());
+                 empsalary[i,6] = netsalary(empsalary[i,4], empsalary[i,5]);
+            }
+        }
+        public static int getgross(int basic, int da , int hra){  //Gross (salary basic+da+hra)
+            return (basic + da + hra);
+        }
+        public static int netsalary(int gross, int tds){        //Net Salary
+            return (gross - tds);
+        }
+        public static void outputdetails(){
+         for (int i=0;i<2;i++){
+                Console.WriteLine($"employee code:{empdetails[i, 0]}");
+                Console.WriteLine($"employee name:{empdetails[i, 1]}");
+                Console.WriteLine($"employee contact number:{empdetails[i, 2]}");
+                Console.WriteLine($"employee code:{empsalary[i, 0]}");
+                Console.WriteLine($"employee basic salary:{empsalary[i, 1]}");
+                Console.WriteLine($"employee DA:{empsalary[i, 2]}");
+                Console.WriteLine($"employee HRA:{empsalary[i, 3]}");
+                Console.WriteLine($"employee Gross salary:{empsalary[i, 4]}");
+                Console.WriteLine($"employee TDS:{empsalary[i, 5]}");
+                Console.WriteLine($"employee net salary:{empsalary[i, 6]}");
+            }
+        }
+    }
+}

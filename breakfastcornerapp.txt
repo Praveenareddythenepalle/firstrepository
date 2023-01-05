@@ -1,0 +1,145 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+namespace assignment{
+     public class ItemException : Exception{
+        public ItemException(string message) : base(message){}
+
+        }
+        public class QuantitityException : Exception{
+        public QuantitityException(string message) : base(message){}
+
+        }
+    class Items{
+        public int ItemId {get; set;}
+        public string ItemName {get; set;}
+        public int Rate {get; set;}
+        public int Qty {get; set;}
+        public int Amount {get; set;}
+    }
+    class ItemOrders{
+        public int Id {get; set;}
+        public int Quantity {get; set;}
+        public int Bill {get; set;}
+    }
+    class Breakfast{
+
+        public static void Main(){
+            menuitems();
+        }
+        public static void menuitems(){
+        List<Items> p = new List<Items>();
+    	p.Add(new Items {ItemId=1, ItemName="Dosa", Rate=30});
+	    p.Add(new Items {ItemId=2, ItemName="Idly", Rate=20});
+	    p.Add(new Items {ItemId=3, ItemName="Puri", Rate=30});
+        p.Add(new Items {ItemId=4, ItemName="MasalaDosa", Rate=50});
+        StreamWriter f = File.CreateText("C:\\assignment\\menu.dat");
+        foreach(Items item in p){
+            string additem = item.ItemId.ToString()+" "+item.ItemName+" "+item.Rate.ToString();
+            f.WriteLine(additem);
+            /*Console.Write(" {0}",item.ItemId);
+            Console.Write(" {0}",item.ItemName);
+            Console.WriteLine(" {0}",item.Rate);*/
+        }
+        f.Close();
+        filetolist(p);
+        
+
+    }
+    public static void filetolist(List<Items> item){
+        int b=0;
+        //int n=0;
+        int totalamount=0;
+        StreamReader fil= new StreamReader(@"C:\\assignment\\menu.dat");
+        string a=fil.ReadLine();
+        string[] arr=a.Split(' ');
+        int id =Convert.ToInt32(arr[0]);
+        int rate =Convert.ToInt32(arr[2]);
+        item.Add(new Items {ItemId=id , ItemName= arr[1] , Rate =rate});
+        foreach(Items it in item){
+            Console.Write(" {0}",it.ItemId);
+            Console.Write(" {0}",it.ItemName);
+            Console.WriteLine(" {0}",it.Rate);
+            b=b+1;
+            if(b==4)
+            break;
+        
+        }
+        Console.WriteLine("Select no.of items:");
+        int n=Convert.ToInt32(Console.ReadLine());
+        for(int i=0;i<n;i++){
+            totalamount=totalamount+orders(item,n);
+        }
+        Console.WriteLine($"Total amount is:{totalamount}");
+    }
+    
+    public static int orders(List<Items> it,int n){
+        int k=0;
+        exception1 :
+        Console.WriteLine("select ItemId:");
+
+        int a = Convert.ToInt32(Console.ReadLine());
+        
+        try{
+            if (a<0 || a>4){
+                throw new ItemException("you have entered invalid item id");
+                }
+            else{
+                goto exception2;
+            }
+            }   
+         catch(ItemException e){
+                Console.WriteLine(e);
+                goto exception1;
+        }
+        exception2 :
+        Console.WriteLine("enter quantity (in plates):");
+        int b = Convert.ToInt32(Console.ReadLine());
+        
+        try{
+            if(b<0){
+                throw new QuantitityException("Quantity should be positive");
+            }
+            
+        }
+        catch(QuantitityException e){
+                Console.WriteLine(e);
+                goto exception2;
+        }
+        try{}
+        finally{
+            k=GenerateandprintBill(it,a,b,n);
+        }
+        return k;
+    }
+    
+        public static int GenerateandprintBill(List<Items> mylist,int a, int b,int n){
+            
+            int c=0;
+            foreach(Items it in mylist){
+                if(a==it.ItemId){
+                    c=it.Rate*b;
+                }
+            }
+            itemstolist(mylist,a,b,n,c);
+            return c;
+        }
+        public static void itemstolist(List<Items> mylist,int a,int b,int n,int c){
+            List<ItemOrders> list1 = new List<ItemOrders>();
+                list1.Add(new ItemOrders {Id=a, Quantity=b,Bill=c});    
+            StreamWriter ordereditems = File.CreateText("C:\\assignment\\ItemOrders.dat");
+            foreach(ItemOrders item in list1){
+                string str =item.Id.ToString()+ " " +item.Quantity.ToString()+" "+item.Bill.ToString();
+                ordereditems.WriteLine(str);
+            }
+            ordereditems.Close();
+        }
+        
+    }
+}
+
+
+
+
